@@ -1,5 +1,6 @@
 import '../css/app.css';
-import '../css/welcome.css';
+import '../css/nav.css';
+import '../css/showcase.css';
 
 
 import { createInertiaApp } from '@inertiajs/vue3';
