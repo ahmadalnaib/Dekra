@@ -1,0 +1,63 @@
+/* Import color variables from external stylesheet */
+@import './colors.css';
+
+/* Global body styles - reset margins/padding and set default text color */
+body {
+    color: var(--clr-white);
+    margin: 0;
+    padding: 0;
+}
+
+/* Header */
+header {
+    padding: 1rem;
+    background-color: var(--clr-darkgreen-500);
+    opacity: 0.9; 
+}
+
+/* Main navigation container  */
+.nav-welcome {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+    max-width: 1200px; 
+    margin: 0 auto; 
+
+    /* Navigation links  */
+    .nav-welcome-links {
+        display: flex;
+        align-items: center;
+        gap: 2rem; 
+
+        /* Login button styling - prominent call-to-action */
+        .nav-welcome-links_login {
+            font-weight: bold;
+            background-color: var(--clr-brightgreen-200);
+            color: var(--clr-darkgreen-500);
+            padding: 5px 10px;
+            border-radius: 0.25rem;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px; 
+            
+            /* Arrow icon using CSS mask technique */
+            .nav-welcome-links_login_icon {
+                height: 17px;
+                width: 17px;
+                background-color: var(--clr-darkgreen-500);
+                /* CSS mask allows SVG icon to inherit background color */
+                -webkit-mask: url('/assets/icons/icon-arrow-circle-right.svg') no-repeat center;
+                mask: url('/assets/icons/icon-arrow-circle-right.svg') no-repeat center;
+                mask-size: contain;
+            }
+        }
+        
+        /* FAQ link styling - subtle bright green text */
+        .nav-welcome-links_faq {
+            font-weight: bold;
+            color: var(--clr-brightgreen-200);
+            text-decoration: none;
+        }
+    }
+}
