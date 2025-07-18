@@ -1,9 +1,10 @@
 <?php
 
-use App\Http\Controllers\Admin\HomeController;
-use App\Http\Controllers\QuestionController;
-use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\HomeController;
+use App\Http\Controllers\Admin\QuestionController;
 
 
 Route::get('/',[HomeController::class,'index'])->name('home');
