@@ -6,46 +6,53 @@
         /* Right side - top: big and small triangles */
         url('../assets/design-elements/triangle-bright-green.svg') no-repeat top right,
         url('../assets/design-elements/triangle-dark-green.svg') no-repeat top right,
-        /* Left side - top: big and small triangles */
-        url('../assets/design-elements/triangle-bright-green.svg') no-repeat top left,
+        /* Left side - top: big and small triangles */ url('../assets/design-elements/triangle-bright-green.svg') no-repeat top left,
         url('../assets/design-elements/triangle-dark-green.svg') no-repeat top left,
-        /* Bottom right corner - single triangle */
-        url('../assets/design-elements/triangle-bright-green.svg') no-repeat bottom right,
-        /* Bottom left corner - single triangle */
-        url('../assets/design-elements/triangle-dark-green.svg') no-repeat bottom left,
-        /* Base green background color */
-        var(--clr-darkgreen-700);
-    
+        /* Bottom right corner - single triangle */ url('../assets/design-elements/triangle-bright-green.svg') no-repeat bottom right,
+        /* Bottom left corner - single triangle */ url('../assets/design-elements/triangle-dark-green.svg') no-repeat bottom left,
+        /* Base green background color */ var(--clr-darkgreen-700);
+
     /* Size and positioning for each triangle */
-    background-size: 
-        150px 150px,  /* Right top - big triangle */
-        120px 120px,  /* Right top - small triangle */
-        150px 150px,  /* Left top - big triangle */
-        120px 120px,  /* Left top - small triangle */
-        180px 180px,  /* Bottom right corner triangle */
-        180px 180px,  /* Bottom left corner triangle */
-        cover;        /* Background color covers full area */
-    
+    background-size:
+        150px 150px,
+        /* Right top - big triangle */ 120px 120px,
+        /* Right top - small triangle */ 150px 150px,
+        /* Left top - big triangle */ 120px 120px,
+        /* Left top - small triangle */ 180px 180px,
+        /* Bottom right corner triangle */ 180px 180px,
+        /* Bottom left corner triangle */ cover; /* Background color covers full area */
+
     /* Positioning all 6 triangles */
-    background-position: 
-        95% 5%,       /* Right top - big triangle */
-        90% 30%,      /* Right top - small triangle */
-        5% 5%,        /* Left top - big triangle */
-        13% 30%,      /* Left top - small triangle */
-        80% 90%,    /* Bottom right corner */
-        20% 90%,      /* Bottom left corner */
-        center;       /* Background color centered */
-    
+    background-position:
+        95% 5%,
+        /* Right top - big triangle */ 90% 30%,
+        /* Right top - small triangle */ 5% 5%,
+        /* Left top - big triangle */ 13% 30%,
+        /* Left top - small triangle */ 80% 90%,
+        /* Bottom right corner */ 20% 90%,
+        /* Bottom left corner */ center; /* Background color centered */
+
     padding: 60px 20px;
-    min-height: 500px;
+    min-height: 600px; 
     position: relative;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
-    
 
+    /* Add rgba overlay layer */
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.2); /* Dark overlay */
+        pointer-events: none;
+        z-index: 1;
+    }
 
     /* Center the heading */
     h1 {
@@ -76,42 +83,336 @@
         width: 100%;
         position: relative;
         z-index: 2;
-        
+        margin-bottom: 3rem;
+
         input {
             flex: 1;
             padding: 12px 16px;
             border: none;
             border-radius: 8px;
             font-size: 1rem;
-            background: rgba(255, 255, 255, 0.9);
+            background: white;
             color: var(--clr-darkgreen-500);
-            
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
             &::placeholder {
                 color: rgba(0, 0, 0, 0.5);
             }
-            
+
             &:focus {
                 outline: none;
                 background: white;
-                box-shadow: 0 0 0 3px var(--clr-brightgreen-200);
+                box-shadow:
+                    0 0 0 3px var(--clr-brightgreen-200),
+                    0 2px 8px rgba(0, 0, 0, 0.15);
             }
         }
-        
+
         button {
             padding: 12px 24px;
-            background: var(--clr-brightgreen-200);
-            color: var(--clr-darkgreen-500);
+            background: var(--clr-darkgreen-500);
+            color: var(--clr-white);
             border: none;
             border-radius: 8px;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
-            
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+
             &:hover {
-                background: var(--clr-brightgreen-300);
+                background: var(--clr-darkgreen-700);
                 transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+            }
+        }
+    }
+
+    /* Categories Section - positioned at bottom */
+    .categories-section {
+        position: absolute;
+        bottom: -50px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.5rem;
+        max-width: 1000px;
+        width: 90%;
+        z-index: 2;
+    }
+
+    .category-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem 1rem;
+        position: relative;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        text-align: left; 
+        height: 120px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start; 
+        align-items: flex-start; 
+
+        &:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            background: var(--clr-darkgreen-500);
+            color: var(--clr-brightgreen-200);
+
+            h3 {
+                color: var(--clr-brightgreen-200); 
+            }
+        }
+
+        h3 {
+            color: var(--clr-darkgreen-500);
+            font-size: 1rem;
+            margin: 0.5rem 0 0.25rem 0;
+            font-weight: bold;
+            text-align: left;
+            transition: color 0.3s ease; 
+        }
+
+        p {
+            color: var(--clr-darkgreen-500);
+            font-size: 0.8rem;
+            line-height: 1.3;
+            margin: 0;
+            max-width: none;
+            text-align: left;
+            transition: color 0.3s ease;
+        }
+    }
+
+    .category-icon {
+        position: absolute;
+        top: 1px;
+        right: 1px;
+        width: 70px;
+        height: 45px;
+        background: var(--clr-darkgreen-300);
+        border-radius: 8px 8px 0 40px; 
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+        img {
+            width: 30px;
+            height: 30px;
+            /* Remove filter to keep SVG original green color */
+            filter: none;
+        }
+    }
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+    .showcase-content {
+        padding: 40px 15px;
+        min-height: 500px;
+
+        .categories-section {
+            position: static;
+            transform: none;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 2rem;
+            width: 100%;
+        }
+
+        .category-card {
+            padding: 1rem;
+            height: 100px;
+
+            h3 {
+                font-size: 0.9rem;
+            }
+
+            p {
+                font-size: 0.7rem;
+            }
+        }
+
+        .category-icon {
+            width: 35px;
+            height: 35px;
+            top: 8px;
+            right: 8px;
+
+            img {
+                width: 18px;
+                height: 18px;
             }
         }
     }
 }
 
+/* Tablet responsive adjustments */
+@media (max-width: 1024px) and (min-width: 769px) {
+    .showcase-content {
+        .categories-section {
+            grid-template-columns: repeat(2, 1fr);
+            bottom: 20px;
+        }
+
+        .category-card {
+            height: 110px;
+        }
+    }
+}
+
+
+/* FAQ Section */
+
+
+.faq-section {
+    background-color: #fff; 
+    padding: 60px 20px;
+    margin-top: 100px; 
+}
+
+.faq-container {
+    max-width: 800px;
+    margin: 0 auto;
+
+}
+
+.faq-section h2 {
+    color: var(--clr-darkgreen-500); 
+    font-size: 2.2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    font-weight: bold;
+}
+
+.faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    
+}
+
+.faq-item {
+ 
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: all 0.3s ease;
+     background: red; /* Default background color for FAQ items */
+}
+
+.faq-item:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.faq-question {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    cursor: pointer;
+    background: white;
+    transition: background-color 0.3s ease;
+}
+
+.faq-question:hover {
+    background: #f9f9f9;
+}
+
+.question-text {
+    color: var(--clr-darkgreen-500); 
+    font-size: 1.1rem;
+    font-weight: 600;
+    flex: 1;
+    text-align: left;
+}
+
+.faq-toggle {
+    background: var(--clr-darkgreen-500);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.faq-toggle:hover {
+    background: var(--clr-darkgreen-700);
+    transform: scale(1.05);
+}
+
+.faq-toggle.active {
+    background: var(--clr-brightgreen-200);
+    color: var(--clr-darkgreen-500);
+}
+
+.toggle-icon {
+    transition: transform 0.3s ease;
+}
+
+.faq-answer {
+    background: var(--clr-darkgreen-500); 
+    color: white; 
+    padding: 1.5rem;
+    animation: slideDown 0.3s ease-out;
+}
+
+.faq-answer p {
+    margin: 0;
+    line-height: 1.6;
+    font-size: 1rem;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        max-height: 0;
+        padding: 0 1.5rem;
+    }
+    to {
+        opacity: 1;
+        max-height: 200px;
+        padding: 1.5rem;
+    }
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .faq-section {
+        padding: 40px 15px;
+        margin-top: 50px;
+    }
+    
+    .faq-section h2 {
+        font-size: 1.8rem;
+    }
+    
+    .faq-question {
+        padding: 1rem;
+    }
+    
+    .question-text {
+        font-size: 1rem;
+    }
+    
+    .faq-toggle {
+        width: 35px;
+        height: 35px;
+        font-size: 1rem;
+    }
+    
+    .faq-answer {
+        padding: 1rem;
+    }
+}
