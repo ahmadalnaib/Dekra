@@ -1,6 +1,6 @@
 <template>
     <NavWelcome />
-    <Showcase />
+  <Showcase :categories="categories" />
     <Footer />
 </template>
 
@@ -8,5 +8,12 @@
 import NavWelcome from '@/components/NavWelcome.vue';
 import Showcase from '@/components/Showcase.vue';
 import Footer from '@/components/Footer.vue';
+
+defineProps({
+    categories: {
+        type: Array,
+        required: true
+    }
+})
 
 </script>

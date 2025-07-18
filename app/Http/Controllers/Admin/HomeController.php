@@ -15,7 +15,7 @@ class HomeController extends Controller
      public function index()
     {
         $categories = Category::all();
-        return Inertia::render('Showcase', [
+        return Inertia::render('Welcome', [
             'categories' => CategoryResource::collection($categories),
         ]);
     }
