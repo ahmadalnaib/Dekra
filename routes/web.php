@@ -3,12 +3,13 @@
 use Inertia\Inertia;
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\HomeController;
-use App\Http\Controllers\Admin\QuestionController;
+
 
 
 Route::get('/',[HomeController::class,'index'])->name('home');
-Route::resource('questions', QuestionController::class);
+Route::resource('faqs', FaqController::class);
 
 
 
