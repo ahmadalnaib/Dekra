@@ -21,6 +21,7 @@ const isMenuOpen = ref(false);
                 <template v-else>
                     <Link :href="route('register')" class="nav-welcome-links_faq">FAQ</Link>
                     <Link :href="route('register')" class="nav-welcome-links_tags">Tags</Link>
+                    <Link :href="route('register')" class="nav-welcome-links_tags">Fragen</Link>
                     <Link :href="route('login')" class="nav-welcome-links_login">
                         <span class="nav-welcome-links_login_icon"></span>
                         Login
@@ -29,9 +30,7 @@ const isMenuOpen = ref(false);
             </div>
 
             <!-- Hamburger button -->
-            <button class="hamburger" @click="isMenuOpen = !isMenuOpen">
-                ☰
-            </button>
+            <button class="hamburger" @click="isMenuOpen = !isMenuOpen">☰</button>
         </nav>
 
         <!-- Mobile menu -->
@@ -47,6 +46,4 @@ const isMenuOpen = ref(false);
             </template>
         </div>
     </header>
-
-       
 </template>

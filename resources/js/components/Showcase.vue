@@ -10,32 +10,11 @@
             </div>
             <!-- Categories Section -->
             <div class="categories-section">
-                <div class="category-card">
+                <div class="category-card" v-for="category in categories" :key="category.id">
                     <div class="category-icon">
-                        <img src="/assets/icons/icon-categorie-allgemeines.svg" alt="Support" />
+                        <img :src="category.icon" :alt="category.name" />
                     </div>
-                    <h3>Technischer Support</h3>
-                </div>
-
-                <div class="category-card">
-                    <div class="category-icon">
-                        <img src="/assets/icons/icon-categorie-services.svg" alt="Billing" />
-                    </div>
-                    <h3>Abrechnung</h3>
-                </div>
-
-                <div class="category-card">
-                    <div class="category-icon">
-                        <img src="/assets/icons/icon-categorie-medien.svg" alt="Account" />
-                    </div>
-                    <h3>Account & Profile</h3>
-                </div>
-
-                <div class="category-card">
-                    <div class="category-icon">
-                        <img src="/assets/icons/icon-categorie-payment.svg" alt="Services" />
-                    </div>
-                    <h3>Services</h3>
+                    <h3>{{ category.name }}</h3>
                 </div>
             </div>
         </div>
@@ -72,16 +51,17 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { ref } from 'vue'
 
-interface FAQ {
-    question: string
-    answer: string
-    isOpen: boolean
-}
+defineProps({
+    categories: {
+        type: Array,
+        required: true
+    }
+})
 
-const faqs = ref<FAQ[]>([
+const faqs = ref([
     {
         question: "Wie kann ich mein Passwort zurücksetzen?",
         answer: "Sie können Ihr Passwort über die 'Passwort vergessen' Funktion auf der Anmeldeseite zurücksetzen. Geben Sie Ihre E-Mail-Adresse ein und folgen Sie den Anweisungen in der E-Mail, die Sie erhalten.",
@@ -109,7 +89,7 @@ const faqs = ref<FAQ[]>([
     }
 ])
 
-const toggleFaq = (index: number) => {
+const toggleFaq = (index) => {
     faqs.value[index].isOpen = !faqs.value[index].isOpen
 }
 </script>
