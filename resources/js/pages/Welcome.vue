@@ -1,6 +1,6 @@
 <template>
     <NavWelcome />
-  <Showcase :categories="categories" />
+  <Showcase :categories="categories" :faqs="faqs" />
     <Footer />
 </template>
 
@@ -11,6 +11,10 @@ import Footer from '@/components/Footer.vue';
 
 defineProps({
     categories: {
+        type: Array,
+        required: true
+    },
+     faqs: {
         type: Array,
         required: true
     }

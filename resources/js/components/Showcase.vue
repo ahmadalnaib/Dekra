@@ -5,12 +5,18 @@
             <p>Willkommen in unserem Hilfe-Center. Hier finden Sie eine Sammlung der häufigsten Fragen und Antworten zu unseren Services.</p>
             <!-- Search -->
             <div class="search-container">
-                <input type="text" placeholder="Suche nach etwas..." />
-                <button>Suchen</button>
+                <input type="text" v-model="searchQuery" placeholder="Suche nach etwas..." />
+                <button @click="performSearch">Suchen</button>
             </div>
             <!-- Categories Section -->
             <div class="categories-section">
-                <div class="category-card" v-for="category in categories" :key="category.id">
+                <div
+                    class="category-card"
+                    v-for="category in categories"
+                    :key="category.id"
+                    :class="{ active: selectedCategoryId === category.id }"
+                    @click="selectCategory(category.id)"
+                >
                     <div class="category-icon">
                         <img :src="category.icon" :alt="category.name" />
                     </div>
@@ -22,29 +28,30 @@
         <!-- FAQ Questions Section -->
         <div class="faq-section">
             <div class="faq-container">
-                <h2>Häufige Fragen</h2>
-                
+                <h2>{{ selectedCategoryId ? getSelectedCategoryName() : 'Häufige Fragen' }}</h2>
+
                 <div class="faq-list">
-                    <div class="faq-item" v-for="(faq, index) in faqs" :key="index">
+                    <div class="faq-item" v-for="faq in filteredFaqs" :key="faq.id">
                         <div class="faq-question">
                             <span class="question-text">{{ faq.question }}</span>
-                            <button 
-                                class="faq-toggle" 
-                                @click="toggleFaq(index)"
-                                :class="{ 'active': faq.isOpen }"
-                            >
-                                <img 
-                                    :src="faq.isOpen ? '/assets/icons/icon-chevron-up.svg' : '/assets/icons/icon-chevron-down.svg'" 
-                                    :alt="faq.isOpen ? 'Schließen' : 'Öffnen'"
+                            <button class="faq-toggle" @click="toggleFaq(faq.id)" :class="{ active: openFaqs.includes(faq.id) }">
+                                <img
+                                    :src="openFaqs.includes(faq.id) ? '/assets/icons/icon-chevron-up.svg' : '/assets/icons/icon-chevron-down.svg'"
+                                    :alt="openFaqs.includes(faq.id) ? 'Schließen' : 'Öffnen'"
                                     class="toggle-icon"
                                 />
                             </button>
                         </div>
-                        
-                        <div class="faq-answer" v-show="faq.isOpen">
+
+                        <div class="faq-answer" v-show="openFaqs.includes(faq.id)">
                             <p>{{ faq.answer }}</p>
                         </div>
                     </div>
+                </div>
+
+                <!-- No FAQs message -->
+                <div v-if="filteredFaqs.length === 0" class="no-faqs">
+                    <p>Keine Fragen in dieser Kategorie gefunden.</p>
                 </div>
             </div>
         </div>
@@ -52,44 +59,94 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue';
 
-defineProps({
+const props = defineProps({
     categories: {
         type: Array,
-        required: true
-    }
-})
+        required: true,
+    },
+    faqs: {
+        type: Array,
+        required: true,
+    },
+});
 
-const faqs = ref([
-    {
-        question: "Wie kann ich mein Passwort zurücksetzen?",
-        answer: "Sie können Ihr Passwort über die 'Passwort vergessen' Funktion auf der Anmeldeseite zurücksetzen. Geben Sie Ihre E-Mail-Adresse ein und folgen Sie den Anweisungen in der E-Mail, die Sie erhalten.",
-        isOpen: false
-    },
-    {
-        question: "Wie kann ich meine Rechnungsdaten ändern?",
-        answer: "Loggen Sie sich in Ihr Konto ein und gehen Sie zu den Kontoeinstellungen. Dort finden Sie den Bereich 'Rechnungsinformationen', wo Sie Ihre Daten aktualisieren können.",
-        isOpen: false
-    },
-    {
-        question: "Welche Zahlungsmethoden werden akzeptiert?",
-        answer: "Wir akzeptieren alle gängigen Kreditkarten (Visa, MasterCard, American Express), PayPal, Banküberweisung und SEPA-Lastschrift für deutsche Kunden.",
-        isOpen: false
-    },
-    {
-        question: "Wie kann ich den technischen Support kontaktieren?",
-        answer: "Sie können uns per E-Mail an support@dekra.de erreichen, über unser Kontaktformular auf der Website oder telefonisch unter +49 711 7861-0 während unserer Geschäftszeiten (Mo-Fr 8:00-18:00 Uhr).",
-        isOpen: false
-    },
-    {
-        question: "Wie lange dauert die Bearbeitung meiner Anfrage?",
-        answer: "Die meisten Anfragen werden innerhalb von 24-48 Stunden bearbeitet. Bei komplexeren technischen Problemen kann die Bearbeitung bis zu 5 Werktage dauern. Sie erhalten eine Bestätigung und regelmäßige Updates per E-Mail.",
-        isOpen: false
-    }
-])
+// Reactive state
+const selectedCategoryId = ref(null);
+const searchQuery = ref('');
+const openFaqs = ref([]);
 
-const toggleFaq = (index) => {
-    faqs.value[index].isOpen = !faqs.value[index].isOpen
-}
+// Computed properties
+const filteredFaqs = computed(() => {
+    let filtered = props.faqs;
+
+    // Filter by category
+    if (selectedCategoryId.value !== null) {
+        filtered = filtered.filter((faq) => faq.category && faq.category.id === selectedCategoryId.value);
+    }
+
+    // Filter by search query
+    if (searchQuery.value.trim()) {
+        const query = searchQuery.value.toLowerCase();
+        filtered = filtered.filter(
+            (faq) =>
+                faq.question.toLowerCase().includes(query) ||
+                faq.answer.toLowerCase().includes(query) ||
+                (faq.category && faq.category.name.toLowerCase().includes(query)),
+        );
+    }
+
+    return filtered;
+});
+
+// Methods
+const selectCategory = (categoryId) => {
+    selectedCategoryId.value = categoryId;
+    // Close all open FAQs when switching categories
+    openFaqs.value = [];
+};
+
+const toggleFaq = (faqId) => {
+    const index = openFaqs.value.indexOf(faqId);
+    if (index > -1) {
+        openFaqs.value.splice(index, 1);
+    } else {
+        openFaqs.value.push(faqId);
+    }
+};
+
+const getSelectedCategoryName = () => {
+    const category = props.categories.find((cat) => cat.id === selectedCategoryId.value);
+    return category ? category.name : 'Häufige Fragen';
+};
+
+
 </script>
+
+<style scoped>
+.category-card {
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.category-card:hover {
+    transform: translateY(-2px);
+}
+
+.category-card.active {
+    border: 2px solid #006b52;
+
+}
+
+.no-faqs {
+    text-align: center;
+    padding: 2rem;
+    color: #666;
+}
+
+.search-container input {
+    margin-right: 0.5rem;
+}
+</style>

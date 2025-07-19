@@ -19,18 +19,13 @@ class FaqController extends Controller
     public function index()
     {
 
-        // $faqs = Faq::with('category')->latest()->paginate(1);
-
-        // return Inertia::render('faqs/Index', [
-        //     'faqs' => FaqResource::collection($faqs),
-        // ]);
         $faqs = Faq::with('category')->latest()->paginate(15);
-        $categories = Category::all(); // Make sure this line is present
-        $tags = Tag::all(); // Make sure this li
+        $categories = Category::all(); 
+        $tags = Tag::all(); 
         return Inertia::render('faqs/Index', [
             'faqs' => $faqs,
-            'categories' => $categories, // Make sure categories are passed
-            'tags' => $tags, // Make sure tags are passed
+            'categories' => $categories, 
+            'tags' => $tags,
         ]);
     }
 
@@ -78,13 +73,7 @@ class FaqController extends Controller
             ->with('success', 'FAQ erfolgreich erstellt.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -102,9 +91,7 @@ class FaqController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+
     public function update(Request $request, string $id)
     {
         $faq = Faq::findOrFail($id);
