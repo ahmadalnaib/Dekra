@@ -173,30 +173,30 @@
 }
 
 .view-btn {
-    background: #e3f2fd;
-    color: #1976d2;
+    background: #006b52;
+
 }
 
 .view-btn:hover {
-    background: #bbdefb;
+    background: #006b52;
 }
 
 .edit-btn {
-    background: #fff3e0;
-    color: #f57c00;
+    background: #006b52;
+    color: #fff;
 }
 
 .edit-btn:hover {
-    background: #ffe0b2;
+    background: #006b52;
 }
 
 .delete-btn {
-    background: #ffebee;
-    color: #d32f2f;
+    background: #006b52;
+    color: #fff;
 }
 
 .delete-btn:hover {
-    background: #ffcdd2;
+    background: #006b52;
 }
 
 @media (max-width: 768px) {

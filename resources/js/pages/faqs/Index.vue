@@ -61,14 +61,17 @@
                 </td>
                 <td>{{ formatDateTime(faq.created_at) }}</td>
                 <td class="actions">
-                  <button class="action-btn view-btn">
-                    <i class="fas fa-eye"></i>
+                  <button class="action-btn view-btn" @click="editFaq(faq)">
+                   <img src="/assets/icons/icon-edit.svg" alt="View">
                   </button>
-                  <button class="action-btn edit-btn">
-                    <i class="fas fa-edit"></i>
+                  <button class="action-btn delete-btn" @click="showDeleteModal(faq)">
+                    <img src="/assets/icons/icon-delete.svg" alt="Delete">
                   </button>
-                  <button class="action-btn delete-btn">
-                    <i class="fas fa-trash"></i>
+                  <button class="action-btn edit-btn" >
+                      <img src="/assets/icons/icon-sort-up.svg" alt="Edit">
+                  </button>
+                  <button class="action-btn delete-btn" >
+                    <img src="/assets/icons/icon-sort-down.svg" alt="Delete">
                   </button>
                 </td>
               </tr>
@@ -79,30 +82,63 @@
               </td>
             </tr>
           </tbody>
-          
         </table>
       </div>
 
       <!-- ✅ Pagination -->
-     <Pagination :links="props.faqs.links" />
+      <Pagination :links="props.faqs.links" />
     </div>
+
+    <!-- FAQ Modal -->
+    <FaqModal
+      :show="showModal"
+      :faq="selectedFaq"
+      :categories="categories"
+      :tags="tags"
+      @close="closeModal"
+      @success="handleSuccess"
+    />
+
+    <!-- Delete Confirmation Modal -->
+    <DeleteConfirmationModal
+      :show="showDeleteConfirmation"
+      title="FAQ löschen"
+      :message="`Sind Sie sicher, dass Sie die FAQ '${faqToDelete?.question}' löschen möchten?`"
+      description="Diese Aktion kann nicht rückgängig gemacht werden."
+      @close="closeDeleteModal"
+      @confirm="confirmDelete"
+    />
   </div>
 </template>
 
 <script setup>
 import NavWelcome from '@/components/NavWelcome.vue';
 import Pagination from '@/components/Pagination.vue';
+import FaqModal from '@/components/FaqModal.vue';
+import DeleteConfirmationModal from '@/components/DeleteConfirmationModal.vue';
 import { computed, ref } from 'vue';
+import { router } from '@inertiajs/vue3';
 
 const props = defineProps({
   faqs: {
-    type: Object, // because it's paginated
+    type: Object, 
     required: true,
   },
+  categories: {
+    type: Array,
+    default: () => []
+  },
+    tags: {
+        type: Array,
+        default: () => []
+    }
 });
 
-
 const searchQuery = ref('');
+const showModal = ref(false);
+const selectedFaq = ref(null);
+const showDeleteConfirmation = ref(false);
+const faqToDelete = ref(null);
 
 const filteredFaqs = computed(() => {
   if (!searchQuery.value) return props.faqs.data;
@@ -124,7 +160,52 @@ const formatDateTime = (dateTime) => {
 };
 
 const createNewFaq = () => {
-  console.log('Neue FAQ erstellen');
+  selectedFaq.value = null;
+  showModal.value = true;
+};
+
+const editFaq = (faq) => {
+  selectedFaq.value = faq;
+  showModal.value = true;
+};
+
+const showDeleteModal = (faq) => {
+  faqToDelete.value = faq;
+  showDeleteConfirmation.value = true;
+};
+
+const closeDeleteModal = () => {
+  showDeleteConfirmation.value = false;
+  faqToDelete.value = null;
+};
+
+const confirmDelete = async () => {
+  if (!faqToDelete.value) return;
+
+  return new Promise((resolve, reject) => {
+    router.delete(`/faqs/${faqToDelete.value.id}`, {
+      onSuccess: () => {
+        console.log('FAQ deleted successfully');
+        closeDeleteModal();
+        resolve();
+      },
+      onError: (errors) => {
+        console.error('Error deleting FAQ:', errors);
+        reject(errors);
+      }
+    });
+  });
+};
+
+const closeModal = () => {
+  showModal.value = false;
+  selectedFaq.value = null;
+};
+
+const handleSuccess = () => {
+  // The modal will close automatically
+  // You might want to show a success message here
+  console.log('FAQ saved successfully');
 };
 </script>
 

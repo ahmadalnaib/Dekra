@@ -3,7 +3,7 @@
 
 /* Global body styles - reset margins/padding and set default text color */
 body {
-    color: var(--clr-white);
+    
     margin: 0;
     padding: 0;
 }

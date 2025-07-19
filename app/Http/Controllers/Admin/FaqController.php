@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Inertia\Inertia;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Http\Resources\FaqResource;
 use App\Models\Faq;
+use App\Models\Tag;
+use Inertia\Inertia;
+use App\Models\Category;
+use Illuminate\Http\Request;
+use App\Http\Resources\FaqResource;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
 
 class FaqController extends Controller
 {
@@ -23,9 +25,12 @@ class FaqController extends Controller
         //     'faqs' => FaqResource::collection($faqs),
         // ]);
         $faqs = Faq::with('category')->latest()->paginate(15);
-
+        $categories = Category::all(); // Make sure this line is present
+        $tags = Tag::all(); // Make sure this li
         return Inertia::render('faqs/Index', [
             'faqs' => $faqs,
+            'categories' => $categories, // Make sure categories are passed
+            'tags' => $tags, // Make sure tags are passed
         ]);
     }
 
@@ -34,7 +39,13 @@ class FaqController extends Controller
      */
     public function create()
     {
-        //
+        $categories = Category::all();
+        $tags = Tag::all();
+
+        return Inertia::render('faqs/Create', [
+            'categories' => $categories,
+            'tags' => $tags,
+        ]);
     }
 
     /**
@@ -42,7 +53,29 @@ class FaqController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'question' => 'required|string|max:255',
+            'answer' => 'required|string',
+            'category_id' => 'nullable|exists:categories,id',
+            'is_active' => 'boolean',
+            'tags' => 'nullable|array',
+            'tags.*' => 'exists:tags,id',
+        ]);
+
+        $faq = Faq::create([
+            'question' => $validated['question'],
+            'answer' => $validated['answer'],
+            'category_id' => $validated['category_id'] ?? null,
+            'is_active' => $validated['is_active'] ?? true,
+        ]);
+
+        // Attach tags if provided
+        if (!empty($validated['tags'])) {
+            $faq->tags()->attach($validated['tags']);
+        }
+
+        return redirect()->route('faqs.index')
+            ->with('success', 'FAQ erfolgreich erstellt.');
     }
 
     /**
@@ -58,7 +91,15 @@ class FaqController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $faq = Faq::with(['category', 'tags'])->findOrFail($id);
+        $categories = Category::all();
+        $tags = Tag::all();
+
+        return Inertia::render('faqs/Edit', [
+            'faq' => new FaqResource($faq),
+            'categories' => $categories,
+            'tags' => $tags,
+        ]);
     }
 
     /**
@@ -66,7 +107,33 @@ class FaqController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $faq = Faq::findOrFail($id);
+
+        $validated = $request->validate([
+            'question' => 'required|string|max:255',
+            'answer' => 'required|string',
+            'category_id' => 'nullable|exists:categories,id',
+            'is_active' => 'boolean',
+            'tags' => 'nullable|array',
+            'tags.*' => 'exists:tags,id',
+        ]);
+
+        $faq->update([
+            'question' => $validated['question'],
+            'answer' => $validated['answer'],
+            'category_id' => $validated['category_id'] ?? null,
+            'is_active' => $validated['is_active'] ?? true,
+        ]);
+
+        // Sync tags (this will remove old tags and add new ones)
+        if (isset($validated['tags'])) {
+            $faq->tags()->sync($validated['tags']);
+        } else {
+            $faq->tags()->detach();
+        }
+
+        return redirect()->route('faqs.index')
+            ->with('success', 'FAQ erfolgreich aktualisiert.');
     }
 
     /**
@@ -74,6 +141,11 @@ class FaqController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $faq = Faq::findOrFail($id);
+        $faq->tags()->detach(); // Remove tag relationships
+        $faq->delete();
+
+        return redirect()->route('faqs.index')
+            ->with('success', 'FAQ erfolgreich gelöscht.');
     }
 }
