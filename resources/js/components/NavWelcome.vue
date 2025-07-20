@@ -3,6 +3,8 @@ import { Head, Link } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
 const isMenuOpen = ref(false);
+
+
 </script>
 
 <template>
@@ -17,11 +19,20 @@ const isMenuOpen = ref(false);
 
             <!-- Desktop links -->
             <div class="nav-welcome-links desktop">
-                <Link v-if="$page.props.auth.user" :href="route('dashboard')">Dashboard</Link>
+        <template v-if="$page.props.auth.user">
+                    <!-- Show Tags and Fragen only for admin users -->
+                    <template v-if="$page.props.auth.user.role === 'admin'">
+                        <Link :href="route('home')" class="nav-welcome-links_faq">FAQ</Link>
+                        <Link :href="route('tags.index')" class="nav-welcome-links_tags">Tags</Link>
+                        <Link :href="route('faqs.index')" class="nav-welcome-links_tags">Fragen</Link>
+                    </template>
+                    <Link :href="route('logout')" method="post" class="nav-welcome-links_login">
+                        <span class="nav-welcome-links_logout_icon"></span>
+                        Logout
+                    </Link>
+                </template>
                 <template v-else>
                     <Link :href="route('home')" class="nav-welcome-links_faq">FAQ</Link>
-                    <Link :href="route('register')" class="nav-welcome-links_tags">Tags</Link>
-                    <Link :href="route('faqs.index')" class="nav-welcome-links_tags">Fragen</Link>
                     <Link :href="route('login')" class="nav-welcome-links_login">
                         <span class="nav-welcome-links_login_icon"></span>
                         Login
@@ -38,7 +49,7 @@ const isMenuOpen = ref(false);
             <Link v-if="$page.props.auth.user" :href="route('dashboard')">Dashboard</Link>
             <template v-else>
                 <Link :href="route('home')" class="nav-welcome-links_faq">FAQ</Link>
-                <Link :href="route('register')" class="nav-welcome-links_tags">Tags</Link>
+                <Link :href="route('tags.index')" class="nav-welcome-links_tags">Tags</Link>
                        <Link :href="route('faqs.index')" class="nav-welcome-links_tags">Fragen</Link>
                 <Link :href="route('login')" class="nav-welcome-links_login">
                     <span class="nav-welcome-links_login_icon"></span>

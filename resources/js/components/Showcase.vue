@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <div class="showcase-content">
+    <div >
+        <div class="showcase-content" style="padding-top: 100px;">
             <h1>Häufig gestellte Fragen</h1>
             <p>Willkommen in unserem Hilfe-Center. Hier finden Sie eine Sammlung der häufigsten Fragen und Antworten zu unseren Services.</p>
             <!-- Search -->

@@ -1,0 +1,168 @@
+<template>
+    <div>
+        <NavWelcome />
+
+        <div class="showcase-content">
+            <h1>Häufig gestellte Fragen</h1>
+            <p>Willkommen in unserem Hilfe-Center. Hier finden Sie eine Sammlung der häufigsten Fragen und Antworten zu unseren Services.</p>
+        </div>
+
+        <!-- FAQ Management Section -->
+        <div class="faq-management-section">
+            <!-- Controls -->
+            <div class="controls-section">
+                <div class="count-section">
+                    <h3>Insgesamt {{ filteredTags.length }} von {{ props.tags.length }} Tags</h3>
+                </div>
+
+                <div class="search-box">
+                    <input type="text" v-model="searchQuery" placeholder="Tags durchsuchen..." class="search-input" />
+                    <button class="search-btn" @click="performSearch">
+                        <i class="fas fa-search"></i>
+                        Suchen
+                    </button>
+                </div>
+
+                <button class="create-btn" @click="createNewTag">
+                    <i class="fas fa-plus"></i>
+                    Neue Tag erstellen
+                </button>
+            </div>
+
+            <!-- FAQ Table -->
+            <div class="table-container">
+                <table class="faq-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Erstellt am</th>
+                            <th>Aktionen</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template v-if="filteredTags.length > 0">
+                            <tr v-for="tag in filteredTags" :key="tag.id">
+                                <td>{{ tag.name }}</td>
+                                <td>{{ formatDateTime(tag.created_at) }}</td>
+                                <td class="actions">
+                                    <button class="action-btn view-btn" @click="editTag(tag)">
+                                        <img src="/assets/icons/icon-edit.svg" alt="Edit" />
+                                    </button>
+                                    <button class="action-btn delete-btn" @click="showDeleteModal(tag)">
+                                        <img src="/assets/icons/icon-delete.svg" alt="Delete" />
+                                    </button>
+                                </td>
+                            </tr>
+                        </template>
+                        <tr v-else>
+                            <td colspan="3" class="py-4 text-center text-gray-500">Keine Tags gefunden.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tag Modal -->
+        <TagModal :show="showModal" :tag="selectedTag" :tags="tags" @close="closeModal" @success="handleSuccess" />
+
+        <!-- Delete Confirmation Modal -->
+        <DeleteConfirmationModal
+            :show="showDeleteConfirmation"
+            title="Tag löschen"
+            :message="`Sind Sie sicher, dass Sie den Tag '${tagToDelete?.name}' löschen möchten?`"
+            description="Diese Aktion kann nicht rückgängig gemacht werden."
+            @close="closeDeleteModal"
+            @confirm="confirmDelete"
+        />
+    </div>
+</template>
+
+<script setup>
+import DeleteConfirmationModal from '@/components/DeleteConfirmationModal.vue';
+import TagModal from '@/components/TagModal.vue';
+import NavWelcome from '@/components/NavWelcome.vue';
+import { router } from '@inertiajs/vue3';
+import { computed, ref } from 'vue';
+
+const props = defineProps({
+    tags: {
+        type: Array,
+        required: true,
+    },
+});
+
+const searchQuery = ref('');
+const showModal = ref(false);
+const selectedTag = ref(null);
+const showDeleteConfirmation = ref(false);
+const tagToDelete = ref(null);
+
+const filteredTags = computed(() => {
+    if (!searchQuery.value) return props.tags;
+    return props.tags.filter((tag) => tag.name?.toLowerCase().includes(searchQuery.value.toLowerCase()));
+});
+
+const performSearch = () => {
+    // Search is reactive, so this function can be empty or used for additional logic
+    console.log('Searching for:', searchQuery.value);
+};
+
+const formatDateTime = (dateTime) => {
+    if (!dateTime) return '-';
+    const date = new Date(dateTime);
+    return date.toLocaleDateString('de-DE');
+};
+
+const createNewTag = () => {
+    selectedTag.value = null;
+    showModal.value = true;
+};
+
+const editTag = (tag) => {
+    selectedTag.value = tag;
+    showModal.value = true;
+};
+
+const showDeleteModal = (tag) => {
+    tagToDelete.value = tag;
+    showDeleteConfirmation.value = true;
+};
+
+const closeDeleteModal = () => {
+    showDeleteConfirmation.value = false;
+    tagToDelete.value = null;
+};
+
+const confirmDelete = async () => {
+    if (!tagToDelete.value) return;
+
+    return new Promise((resolve, reject) => {
+        router.delete(`/tags/${tagToDelete.value.id}`, {
+            onSuccess: () => {
+                console.log('Tag deleted successfully');
+                closeDeleteModal();
+                resolve();
+            },
+            onError: (errors) => {
+                console.error('Error deleting Tag:', errors);
+                reject(errors);
+            },
+        });
+    });
+};
+
+const closeModal = () => {
+    showModal.value = false;
+    selectedTag.value = null;
+};
+
+const handleSuccess = () => {
+    // The modal will close automatically
+    // You might want to show a success message here
+    console.log('Tag saved successfully');
+};
+</script>
+
+<style scoped>
+/* Optional styling here */
+</style>

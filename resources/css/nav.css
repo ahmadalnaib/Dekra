@@ -65,6 +65,12 @@ header {
             color: var(--clr-brightgreen-200);
             text-decoration: none;
         }
+
+        .nav-welcome-links_tags {
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
     }
 }
 
