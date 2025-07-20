@@ -7,6 +7,7 @@ use App\Models\Tag;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\TagRequest;
 use Illuminate\Validation\Rule;
 
 class TagController extends Controller
@@ -17,7 +18,7 @@ class TagController extends Controller
     public function index()
     {
         $tags = Tag::orderBy('created_at', 'desc')->get();
-        
+
         return Inertia::render('tags/Index', [
             'tags' => $tags,
         ]);
@@ -28,17 +29,21 @@ class TagController extends Controller
      */
     public function create()
     {
+         if (request()->user()->cannot('create', Tag::class)) {
+            abort(403);
+        }
         return Inertia::render('tags/Create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(TagRequest $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:tags,name',
-        ]);
+         if (request()->user()->cannot('create', Tag::class)) {
+            abort(403);
+        }
+        $validated = $request->validated();
 
         Tag::create($validated);
 
@@ -46,45 +51,18 @@ class TagController extends Controller
             ->with('success', 'Tag wurde erfolgreich erstellt.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show($id)
-    {
-        $tag = Tag::findOrFail($id);
-        
-        return Inertia::render('tags/Show', [
-            'tag' => $tag,
-        ]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
-    {
-        $tag = Tag::findOrFail($id);
-        
-        return Inertia::render('tags/Edit', [
-            'tag' => $tag,
-        ]);
-    }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(TagRequest $request, $id)
     {
         $tag = Tag::findOrFail($id);
+        if (request()->user()->cannot('update', $tag)) {
+            abort(403);
+        }
         
-        $validated = $request->validate([
-            'name' => [
-                'required',
-                'string',
-                'max:255',
-                Rule::unique('tags', 'name')->ignore($tag->id),
-            ],
-        ]);
+        $validated = $request->validated();
 
         $tag->update($validated);
 
@@ -92,12 +70,16 @@ class TagController extends Controller
             ->with('success', 'Tag wurde erfolgreich aktualisiert.');
     }
 
+
     /**
      * Remove the specified resource from storage.
      */
     public function destroy($id)
     {
         $tag = Tag::findOrFail($id);
+        if (request()->user()->cannot('delete', $tag)) {
+            abort(403);
+        }
         $tag->delete();
 
         return redirect()->route('tags.index')

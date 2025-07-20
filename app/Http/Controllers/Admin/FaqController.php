@@ -6,7 +6,7 @@ use App\Models\Faq;
 use App\Models\Tag;
 use Inertia\Inertia;
 use App\Models\Category;
-use Illuminate\Http\Request;
+use App\Http\Requests\FaqRequest;
 use App\Http\Resources\FaqResource;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
@@ -18,13 +18,12 @@ class FaqController extends Controller
      */
     public function index()
     {
-
         $faqs = Faq::with('category')->latest()->paginate(15);
-        $categories = Category::all(); 
-        $tags = Tag::all(); 
+        $categories = Category::all();
+        $tags = Tag::all();
         return Inertia::render('faqs/Index', [
             'faqs' => $faqs,
-            'categories' => $categories, 
+            'categories' => $categories,
             'tags' => $tags,
         ]);
     }
@@ -34,6 +33,9 @@ class FaqController extends Controller
      */
     public function create()
     {
+        if (request()->user()->cannot('create', Faq::class)) {
+            abort(403);
+        }
         $categories = Category::all();
         $tags = Tag::all();
 
@@ -46,22 +48,23 @@ class FaqController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(FaqRequest $request)
     {
-        $validated = $request->validate([
-            'question' => 'required|string|max:255',
-            'answer' => 'required|string',
-            'category_id' => 'nullable|exists:categories,id',
-            'is_active' => 'boolean',
-            'tags' => 'nullable|array',
-            'tags.*' => 'exists:tags,id',
-        ]);
+
+        if (request()->user()->cannot('create', Faq::class)) {
+            abort(403);
+        }
+        $validated = $request->validated();
+
+        // Get the next order number if not provided
+        $order = $validated['order'] ?? (Faq::max('order') + 1) ?? 1;
 
         $faq = Faq::create([
             'question' => $validated['question'],
             'answer' => $validated['answer'],
             'category_id' => $validated['category_id'] ?? null,
             'is_active' => $validated['is_active'] ?? true,
+            'order' => $order,
         ]);
 
         // Attach tags if provided
@@ -76,40 +79,26 @@ class FaqController extends Controller
 
 
     /**
-     * Show the form for editing the specified resource.
+     * Update the specified resource in storage.
      */
-    public function edit(string $id)
-    {
-        $faq = Faq::with(['category', 'tags'])->findOrFail($id);
-        $categories = Category::all();
-        $tags = Tag::all();
-
-        return Inertia::render('faqs/Edit', [
-            'faq' => new FaqResource($faq),
-            'categories' => $categories,
-            'tags' => $tags,
-        ]);
-    }
-
-
-    public function update(Request $request, string $id)
+    public function update(FaqRequest $request, string $id)
     {
         $faq = Faq::findOrFail($id);
 
-        $validated = $request->validate([
-            'question' => 'required|string|max:255',
-            'answer' => 'required|string',
-            'category_id' => 'nullable|exists:categories,id',
-            'is_active' => 'boolean',
-            'tags' => 'nullable|array',
-            'tags.*' => 'exists:tags,id',
-        ]);
+        if ($request->user()->cannot('update', $faq)) {
+            abort(403);
+        }
+        $validated = $request->validated();
+
+        // Use existing order if not provided
+        $order = $validated['order'] ?? $faq->order;
 
         $faq->update([
             'question' => $validated['question'],
             'answer' => $validated['answer'],
             'category_id' => $validated['category_id'] ?? null,
             'is_active' => $validated['is_active'] ?? true,
+            'order' => $order,
         ]);
 
         // Sync tags (this will remove old tags and add new ones)
@@ -128,7 +117,11 @@ class FaqController extends Controller
      */
     public function destroy(string $id)
     {
+
         $faq = Faq::findOrFail($id);
+        if (request()->user()->cannot('delete', $faq)) {
+            abort(403);
+        }
         $faq->tags()->detach(); // Remove tag relationships
         $faq->delete();
 
