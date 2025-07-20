@@ -26,33 +26,41 @@ This is a full-stack FAQ management web application built with **Laravel**, **In
 ```bash
 git clone https://github.com/ahmadalnaib/Dekra
 cd Dekra
+```
 
-## 1. Install dependencies
- 
-- composer install
-- npm install && npm run build
+### 1. Install dependencies
 
+```bash
+composer install
+npm install && npm run build
+```
 
-## 2. Create .env file
+### 2. Create `.env` file and generate app key
 
-- cp .env.example .env
-- php artisan key:generate
+```bash
+cp .env.example .env
+php artisan key:generate
+```
 
-Then, set your database credentials and other environment variables in .env.
+Then, set your database credentials and other environment variables in `.env`.
 
-## 3.Run migrations and seeders
+### 3. Run migrations and seeders
 
-- php artisan migrate db:seed
+```bash
+php artisan migrate db:seed
+```
 
-# This will create the tables and insert initial data for:
+This will create the tables and insert initial data for:
 
 - Categories
-
 - FAQs
-
 - Admin user
 
+---
 
-# A default admin account is created:
-- Email: admin@dekra.com
-- Password: 123456789
+## 🔐 Default Admin Account
+
+```txt
+Email: admin@dekra.com
+Password: 123456789
+```
