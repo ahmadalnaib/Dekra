@@ -13,7 +13,7 @@ class TagPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+         return $user->role === 'admin';
     }
 
     /**
@@ -21,7 +21,7 @@ class TagPolicy
      */
     public function view(User $user, Tag $tag): bool
     {
-        return false;
+        return $user->role === 'admin';
     }
 
     /**
@@ -45,10 +45,6 @@ class TagPolicy
      */
     public function delete(User $user, Tag $tag): bool
     {
-       return $user->role === 'admin';
+        return $user->role === 'admin';
     }
-
-
-
-
 }

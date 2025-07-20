@@ -1,137 +1,121 @@
 <template>
-  <div>
-    <NavWelcome />
+    <div>
+        <NavWelcome />
 
-    <div class="showcase-content">
-      <h1>Häufig gestellte Fragen</h1>
-      <p>
-        Willkommen in unserem Hilfe-Center. Hier finden Sie eine Sammlung der
-        häufigsten Fragen und Antworten zu unseren Services.
-      </p>
-    </div>
-
-    <!-- FAQ Management Section -->
-    <div class="faq-management-section">
-      <!-- Controls -->
-      <div class="controls-section">
-        <div class="count-section">
-          <h3>
-            Insgesamt {{ filteredFaqs.length }} von {{ props.faqs.total }} Fragen
-          </h3>
+        <div class="showcase-content">
+            <h1>FAQ Verwaltung</h1>
+            <p>
+                Willkommen im internen Tool zur Verwaltung von häufig gestellten Fragen. Hire Sie neue Fragen für Quizzes,Tests order
+                FAQs erstellen, bearbeiten Fragen anpassen  und Ihre  Fragensammlungen effizient organisieren. 
+            </p>
         </div>
 
-        <div class="search-box">
-          <input
-            type="text"
-            v-model="searchQuery"
-            placeholder="FAQs durchsuchen..."
-            class="search-input"
-          />
-          <button class="search-btn" @click="performSearch">
-            <i class="fas fa-search"></i>
-            Suchen
-          </button>
+        <!-- FAQ Management Section -->
+        <div class="faq-management-section">
+            <!-- Controls -->
+            <div class="controls-section">
+                <div class="count-section">
+                    <h3>Insgesamt {{ filteredFaqs.length }} von {{ props.faqs.total }} Fragen</h3>
+                </div>
+
+                <div class="search-box">
+                    <input type="text" v-model="searchQuery" placeholder="FAQs durchsuchen..." class="search-input" />
+                    <button class="search-btn" @click="performSearch">
+                        <i class="fas fa-search"></i>
+                        Suchen
+                    </button>
+                </div>
+
+                <button class="create-btn" @click="createNewFaq">
+                    <i class="fas fa-plus"></i>
+                    Neue FAQ erstellen
+                </button>
+            </div>
+
+            <!-- FAQ Table -->
+            <div class="table-container">
+                <table class="faq-table">
+                    <thead>
+                        <tr>
+                            <th>Frage</th>
+                            <th>Kategorie</th>
+                            <th>Erstellt am</th>
+                            <th>Aktionen</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template v-if="filteredFaqs.length > 0">
+                            <tr v-for="faq in filteredFaqs" :key="faq.id">
+                                <td>{{ faq.question }}</td>
+                                <td>
+                                    <span class="category-badge">
+                                        {{ faq.category?.name || 'Keine Kategorie' }}
+                                    </span>
+                                </td>
+                                <td>{{ formatDateTime(faq.created_at) }}</td>
+                                <td class="actions">
+                                    <button class="action-btn view-btn" @click="editFaq(faq)">
+                                        <img src="/assets/icons/icon-edit.svg" alt="View" />
+                                    </button>
+                                    <button class="action-btn delete-btn" @click="showDeleteModal(faq)">
+                                        <img src="/assets/icons/icon-delete.svg" alt="Delete" />
+                                    </button>
+                                    <button class="action-btn edit-btn">
+                                        <img src="/assets/icons/icon-sort-up.svg" alt="Edit" />
+                                    </button>
+                                    <button class="action-btn delete-btn">
+                                        <img src="/assets/icons/icon-sort-down.svg" alt="Delete" />
+                                    </button>
+                                </td>
+                            </tr>
+                        </template>
+                        <tr v-else>
+                            <td colspan="4" class="py-4 text-center text-gray-500">Keine Fragen gefunden.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- ✅ Pagination -->
+            <Pagination :links="props.faqs.links" />
         </div>
 
-        <button class="create-btn" @click="createNewFaq">
-          <i class="fas fa-plus"></i>
-          Neue FAQ erstellen
-        </button>
-      </div>
+        <!-- FAQ Modal -->
+        <FaqModal :show="showModal" :faq="selectedFaq" :categories="categories" :tags="tags" @close="closeModal" @success="handleSuccess" />
 
-      <!-- FAQ Table -->
-      <div class="table-container">
-        <table class="faq-table">
-          <thead>
-            <tr>
-              <th>Frage</th>
-              <th>Kategorie</th>
-              <th>Erstellt am</th>
-              <th>Aktionen</th>
-            </tr>
-          </thead>
-          <tbody>
-            <template v-if="filteredFaqs.length > 0">
-              <tr v-for="faq in filteredFaqs" :key="faq.id">
-                <td>{{ faq.question }}</td>
-                <td>
-                  <span class="category-badge">
-                    {{ faq.category?.name || 'Keine Kategorie' }}
-                  </span>
-                </td>
-                <td>{{ formatDateTime(faq.created_at) }}</td>
-                <td class="actions">
-                  <button class="action-btn view-btn" @click="editFaq(faq)">
-                   <img src="/assets/icons/icon-edit.svg" alt="View">
-                  </button>
-                  <button class="action-btn delete-btn" @click="showDeleteModal(faq)">
-                    <img src="/assets/icons/icon-delete.svg" alt="Delete">
-                  </button>
-                  <button class="action-btn edit-btn" >
-                      <img src="/assets/icons/icon-sort-up.svg" alt="Edit">
-                  </button>
-                  <button class="action-btn delete-btn" >
-                    <img src="/assets/icons/icon-sort-down.svg" alt="Delete">
-                  </button>
-                </td>
-              </tr>
-            </template>
-            <tr v-else>
-              <td colspan="4" class="py-4 text-center text-gray-500">
-                Keine Fragen gefunden.
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- ✅ Pagination -->
-      <Pagination :links="props.faqs.links" />
+        <!-- Delete Confirmation Modal -->
+        <DeleteConfirmationModal
+            :show="showDeleteConfirmation"
+            title="FAQ löschen"
+            :message="`Sind Sie sicher, dass Sie die FAQ '${faqToDelete?.question}' löschen möchten?`"
+            description="Diese Aktion kann nicht rückgängig gemacht werden."
+            @close="closeDeleteModal"
+            @confirm="confirmDelete"
+        />
     </div>
-
-    <!-- FAQ Modal -->
-    <FaqModal
-      :show="showModal"
-      :faq="selectedFaq"
-      :categories="categories"
-      :tags="tags"
-      @close="closeModal"
-      @success="handleSuccess"
-    />
-
-    <!-- Delete Confirmation Modal -->
-    <DeleteConfirmationModal
-      :show="showDeleteConfirmation"
-      title="FAQ löschen"
-      :message="`Sind Sie sicher, dass Sie die FAQ '${faqToDelete?.question}' löschen möchten?`"
-      description="Diese Aktion kann nicht rückgängig gemacht werden."
-      @close="closeDeleteModal"
-      @confirm="confirmDelete"
-    />
-  </div>
 </template>
 
 <script setup>
+import DeleteConfirmationModal from '@/components/DeleteConfirmationModal.vue';
+import FaqModal from '@/components/FaqModal.vue';
 import NavWelcome from '@/components/NavWelcome.vue';
 import Pagination from '@/components/Pagination.vue';
-import FaqModal from '@/components/FaqModal.vue';
-import DeleteConfirmationModal from '@/components/DeleteConfirmationModal.vue';
-import { computed, ref } from 'vue';
 import { router } from '@inertiajs/vue3';
+import { computed, ref } from 'vue';
 
 const props = defineProps({
-  faqs: {
-    type: Object, 
-    required: true,
-  },
-  categories: {
-    type: Array,
-    default: () => []
-  },
+    faqs: {
+        type: Object,
+        required: true,
+    },
+    categories: {
+        type: Array,
+        default: () => [],
+    },
     tags: {
         type: Array,
-        default: () => []
-    }
+        default: () => [],
+    },
 });
 
 const searchQuery = ref('');
@@ -141,71 +125,71 @@ const showDeleteConfirmation = ref(false);
 const faqToDelete = ref(null);
 
 const filteredFaqs = computed(() => {
-  if (!searchQuery.value) return props.faqs.data;
-  return props.faqs.data.filter(
-    (faq) =>
-      faq.question.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      faq.category?.name?.toLowerCase().includes(searchQuery.value.toLowerCase())
-  );
+    if (!searchQuery.value) return props.faqs.data;
+    return props.faqs.data.filter(
+        (faq) =>
+            faq.question.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+            faq.category?.name?.toLowerCase().includes(searchQuery.value.toLowerCase()),
+    );
 });
 
 const performSearch = () => {
-  console.log('Search query:', searchQuery.value);
+    console.log('Search query:', searchQuery.value);
 };
 
 const formatDateTime = (dateTime) => {
-  if (!dateTime) return '-';
-  const date = new Date(dateTime);
-  return date.toLocaleDateString('de-DE');
+    if (!dateTime) return '-';
+    const date = new Date(dateTime);
+    return date.toLocaleDateString('de-DE');
 };
 
 const createNewFaq = () => {
-  selectedFaq.value = null;
-  showModal.value = true;
+    selectedFaq.value = null;
+    showModal.value = true;
 };
 
 const editFaq = (faq) => {
-  selectedFaq.value = faq;
-  showModal.value = true;
+    selectedFaq.value = faq;
+    showModal.value = true;
 };
 
 const showDeleteModal = (faq) => {
-  faqToDelete.value = faq;
-  showDeleteConfirmation.value = true;
+    faqToDelete.value = faq;
+    showDeleteConfirmation.value = true;
 };
 
 const closeDeleteModal = () => {
-  showDeleteConfirmation.value = false;
-  faqToDelete.value = null;
+    showDeleteConfirmation.value = false;
+    faqToDelete.value = null;
 };
 
 const confirmDelete = async () => {
-  if (!faqToDelete.value) return;
+    if (!faqToDelete.value) return;
 
-  return new Promise((resolve, reject) => {
-    router.delete(`/faqs/${faqToDelete.value.id}`, {
-      onSuccess: () => {
-        console.log('FAQ deleted successfully');
-        closeDeleteModal();
-        resolve();
-      },
-      onError: (errors) => {
-        console.error('Error deleting FAQ:', errors);
-        reject(errors);
-      }
+    return new Promise((resolve, reject) => {
+        router.delete(`/faqs/${faqToDelete.value.id}`, {
+            onSuccess: () => {
+                console.log('FAQ deleted successfully');
+                closeDeleteModal();
+                resolve();
+            },
+            onError: (errors) => {
+                console.error('Error deleting FAQ:', errors);
+                reject(errors);
+            },
+        });
     });
-  });
 };
 
 const closeModal = () => {
-  showModal.value = false;
-  selectedFaq.value = null;
+    showModal.value = false;
+    selectedFaq.value = null;
 };
 
 const handleSuccess = () => {
-  // The modal will close automatically
-  // You might want to show a success message here
-  console.log('FAQ saved successfully');
+    // The modal will close automatically
+    // You might want to show a success message here
+    console.log('FAQ saved successfully');
 };
 </script>
 

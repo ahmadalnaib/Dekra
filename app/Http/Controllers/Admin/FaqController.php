@@ -18,6 +18,9 @@ class FaqController extends Controller
      */
     public function index()
     {
+        if (request()->user()->cannot('viewAny', Faq::class)) {
+            abort(403);
+        }
         $faqs = Faq::with('category')->latest()->paginate(15);
         $categories = Category::all();
         $tags = Tag::all();

@@ -17,6 +17,9 @@ class TagController extends Controller
      */
     public function index()
     {
+        if (request()->user()->cannot('viewAny', Tag::class)) {
+            abort(403);
+        }
         $tags = Tag::orderBy('created_at', 'desc')->get();
 
         return Inertia::render('tags/Index', [

@@ -3,8 +3,10 @@
         <NavWelcome />
 
         <div class="showcase-content">
-            <h1>Häufig gestellte Fragen</h1>
-            <p>Willkommen in unserem Hilfe-Center. Hier finden Sie eine Sammlung der häufigsten Fragen und Antworten zu unseren Services.</p>
+            <h1>Tag Verwaltung</h1>
+            <p>Hier verwalten Sie die Schlagwörter (Tags) für Ihre Inhalte. Erstellen, bearbeiten und organisieren Sie Tags,
+                um die Auffindbarkeit und Kategorisierung  Ihrer digitalen Trainings zu optimieren.
+            </p>
         </div>
 
         <!-- FAQ Management Section -->

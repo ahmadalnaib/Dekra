@@ -13,7 +13,7 @@ class FaqPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return $user->role === 'admin';
     }
 
     /**
@@ -21,7 +21,7 @@ class FaqPolicy
      */
     public function view(User $user, Faq $faq): bool
     {
-        return false;
+        return $user->role === 'admin';
     }
 
     /**
