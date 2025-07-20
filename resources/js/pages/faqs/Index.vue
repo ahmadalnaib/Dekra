@@ -1,4 +1,5 @@
 <template>
+    <Head title="FAQ Verwaltung" />
     <div>
         <NavWelcome />
 
@@ -21,13 +22,13 @@
                 <div class="search-box">
                     <input type="text" v-model="searchQuery" placeholder="FAQs durchsuchen..." class="search-input" />
                     <button class="search-btn" @click="performSearch">
-                        <i class="fas fa-search"></i>
+                        <img src="/assets/icons/search-light.svg" alt="Search Icon" class="search-icon" />
                         Suchen
                     </button>
                 </div>
 
                 <button class="create-btn" @click="createNewFaq">
-                    <i class="fas fa-plus"></i>
+                    <img src="/assets/icons/add.svg" alt="Add Icon" class="search-icon" />
                     Neue FAQ erstellen
                 </button>
             </div>
@@ -100,7 +101,7 @@ import DeleteConfirmationModal from '@/components/DeleteConfirmationModal.vue';
 import FaqModal from '@/components/FaqModal.vue';
 import NavWelcome from '@/components/NavWelcome.vue';
 import Pagination from '@/components/Pagination.vue';
-import { router } from '@inertiajs/vue3';
+import { router,Head } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 
 const props = defineProps({

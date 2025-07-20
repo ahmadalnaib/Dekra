@@ -93,10 +93,11 @@
 
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" @click="closeModal">
+                 <img class="search-icon" src="/assets/icons/icon-remove.svg" alt="search" />
             Abbrechen
           </button>
           <button type="submit" class="btn btn-primary" :disabled="processing">
-            {{ processing ? 'Wird gespeichert...' : (isEdit ? 'Aktualisieren' : 'Erstellen') }}
+            {{ processing ? 'Wird gespeichert...' : (isEdit ? 'Aktualisieren' : 'Speichern') }}
           </button>
         </div>
       </form>
@@ -254,8 +255,9 @@ const submitForm = () => {
   border: none;
   font-size: 18px;
   cursor: pointer;
-  color: red;
+  color: #3d1000;
   padding: 4px;
+
 }
 
 .close-btn:hover {
@@ -311,7 +313,7 @@ const submitForm = () => {
 .form-input.error,
 .form-textarea.error,
 .form-select.error {
-  border-color: #ef4444;
+  border-color: #d10000;
 }
 
 .form-textarea {
@@ -360,7 +362,7 @@ const submitForm = () => {
 }
 
 .error-message {
-  color: #ef4444;
+  color: #d10000;
   font-size: 12px;
   margin-top: 4px;
   display: block;
@@ -384,25 +386,17 @@ const submitForm = () => {
 }
 
 .btn-secondary {
-  background-color: #7d0000;
+  background-color: #d10000;
   color: white;
+  display: flex;
 }
 
-.btn-secondary:hover {
-  background-color: #4b5563;
-}
+
 
 .btn-primary {
   background-color: #006b52;
   color: #b0fd78;
 }
 
-.btn-primary:hover:not(:disabled) {
-  background-color: darkgreen;
-}
 
-.btn-primary:disabled {
-  background-color: #9ca3af;
-  cursor: not-allowed;
-}
 </style>

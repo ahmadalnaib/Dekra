@@ -120,9 +120,7 @@ const handleConfirm = async () => {
   transition: color 0.2s;
 }
 
-.close-btn:hover {
-  color: #696969;
-}
+
 
 .modal-body {
   padding: 2rem 1.5rem;
@@ -140,20 +138,20 @@ const handleConfirm = async () => {
 
 .modal-body p {
   margin: 0 0 1rem 0;
-  color: #374151;
+  color: #006b52;
   font-size: 1.1rem;
   font-weight: 500;
 }
 
 .description {
-  color: #6b7280 !important;
+  color: #006b52 !important;
   font-size: 0.9rem !important;
   font-weight: 400 !important;
 }
 
 .modal-footer {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   gap: 0.75rem;
   padding: 1.5rem;
   border-top: 1px solid #e5e7eb;
@@ -178,23 +176,18 @@ const handleConfirm = async () => {
 }
 
 .btn-cancel {
-  background-color: #f3f4f6;
-  color: #374151;
-  border: 1px solid #d1d5db;
+  background-color: #696969;
+  color: #ffffff;
+  border: 1px solid #696969;
 }
 
-.btn-cancel:hover:not(:disabled) {
-  background-color: #e5e7eb;
-}
+
 
 .btn-delete {
   background-color: #d10000;
   color: white;
 }
 
-.btn-delete:hover:not(:disabled) {
-  background-color: #d10000;
-}
 
 .fa-spin {
   animation: fa-spin 1s infinite linear;

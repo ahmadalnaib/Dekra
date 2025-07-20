@@ -1,12 +1,15 @@
 <template>
-    <div >
-        <div class="showcase-content" style="padding-top: 100px;">
+    <Head title="Häufig gestellte Fragen" />
+    <div>
+        <div class="showcase-content" style="padding-top: 100px">
             <h1>Häufig gestellte Fragen</h1>
             <p>Willkommen in unserem Hilfe-Center. Hier finden Sie eine Sammlung der häufigsten Fragen und Antworten zu unseren Services.</p>
             <!-- Search -->
             <div class="search-container">
                 <input type="text" v-model="searchQuery" placeholder="Suche nach etwas..." />
-                <button @click="performSearch">Suchen</button>
+                <button @click="performSearch">
+                    <img class="search-icon" src="/assets/icons/search.svg" alt="search" />
+                     Suchen</button>
             </div>
             <!-- Categories Section -->
             <div class="categories-section">
@@ -20,7 +23,7 @@
                     <div class="category-icon">
                         <img :src="category.icon" :alt="category.name" />
                     </div>
-                    <h3>{{ category.name }}</h3>
+                    <h3 class="">{{ category.name }}</h3>
                 </div>
             </div>
         </div>
@@ -59,7 +62,8 @@
 </template>
 
 <script setup>
-import { computed, ref, onMounted, watch } from 'vue';
+import { Head } from '@inertiajs/vue3';
+import { computed, onMounted, ref, watch } from 'vue';
 
 const props = defineProps({
     categories: {
@@ -85,11 +89,15 @@ onMounted(() => {
 });
 
 // Watch for categories prop changes and set first category if none selected
-watch(() => props.categories, (newCategories) => {
-    if (newCategories.length > 0 && selectedCategoryId.value === null) {
-        selectedCategoryId.value = newCategories[0].id;
-    }
-}, { immediate: true });
+watch(
+    () => props.categories,
+    (newCategories) => {
+        if (newCategories.length > 0 && selectedCategoryId.value === null) {
+            selectedCategoryId.value = newCategories[0].id;
+        }
+    },
+    { immediate: true },
+);
 
 // Computed properties
 const filteredFaqs = computed(() => {
@@ -140,7 +148,6 @@ const performSearch = () => {
     // This function can be used for additional search logic if needed
     console.log('Searching for:', searchQuery.value);
 };
-
 </script>
 
 <style scoped>
@@ -157,7 +164,7 @@ const performSearch = () => {
 .category-card.active {
     border: 2px solid #006b52;
     background: #006b52;
-    h3{
+    h3 {
         color: #b0fd78;
     }
 }
@@ -168,7 +175,5 @@ const performSearch = () => {
     color: #666;
 }
 
-.search-container input {
-    margin-right: 0.5rem;
-}
+
 </style>

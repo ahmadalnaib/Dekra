@@ -19,25 +19,25 @@ class CategorySeeder extends Seeder
          $categories = [
             [
                 'name' => 'Allgemein',
-                'icon' => '/assets/icons/icon-categorie-allgemeines.svg',
+                'icon' => '/assets/icons/allgemeines.svg',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
             [
                 'name' => 'Services',
-                'icon' => '/assets/icons/icon-categorie-services.svg',
+                'icon' => '/assets/icons/services.svg',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
             [
                 'name' => 'Medien',
-                'icon' => '/assets/icons/icon-categorie-medien.svg',
+                'icon' => '/assets/icons/medien.svg',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
             [
                 'name' => 'Zahlungen',
-                'icon' => '/assets/icons/icon-categorie-payment.svg',
+                'icon' => '/assets/icons/payment.svg',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],

@@ -189,11 +189,11 @@ const submitForm = () => {
 }
 
 .form-input.error {
-  border-color: #ef4444;
+  border-color: #d10000;
 }
 
 .error-message {
-  color: #ef4444;
+  color: #d10000;
   font-size: 12px;
   margin-top: 4px;
   display: block;
@@ -201,7 +201,7 @@ const submitForm = () => {
 
 .modal-footer {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   gap: 10px;
   padding-top: 20px;
   border-top: 1px solid #e5e7eb;
@@ -217,25 +217,17 @@ const submitForm = () => {
 }
 
 .btn-secondary {
-  background-color: #7d0000;
+  background-color: #d10000;
   color: white;
 }
 
-.btn-secondary:hover {
-  background-color: #4b5563;
-}
 
 .btn-primary {
   background-color: #006b52;
   color: #b0fd78;
 }
 
-.btn-primary:hover:not(:disabled) {
-  background-color: darkgreen;
-}
 
-.btn-primary:disabled {
-  background-color: #9ca3af;
-  cursor: not-allowed;
-}
+
+
 </style>

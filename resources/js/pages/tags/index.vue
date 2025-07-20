@@ -1,5 +1,6 @@
 <template>
     <div>
+    <Head title="Tag Verwaltung" />
         <NavWelcome />
 
         <div class="showcase-content">
@@ -20,13 +21,13 @@
                 <div class="search-box">
                     <input type="text" v-model="searchQuery" placeholder="Tags durchsuchen..." class="search-input" />
                     <button class="search-btn" @click="performSearch">
-                        <i class="fas fa-search"></i>
+                        <img src="/assets/icons/search-light.svg" alt="Search Icon" class="search-icon" />
                         Suchen
                     </button>
                 </div>
 
                 <button class="create-btn" @click="createNewTag">
-                    <i class="fas fa-plus"></i>
+                     <img src="/assets/icons/add.svg" alt="Add Icon" class="search-icon" />
                     Neue Tag erstellen
                 </button>
             </div>
@@ -83,7 +84,7 @@
 import DeleteConfirmationModal from '@/components/DeleteConfirmationModal.vue';
 import TagModal from '@/components/TagModal.vue';
 import NavWelcome from '@/components/NavWelcome.vue';
-import { router } from '@inertiajs/vue3';
+import { router,Head } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 
 const props = defineProps({

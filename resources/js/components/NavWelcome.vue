@@ -27,7 +27,7 @@ const isMenuOpen = ref(false);
                         <Link :href="route('faqs.index')" class="nav-welcome-links_tags">Fragen</Link>
                     </template>
                     <Link :href="route('logout')" method="post" class="nav-welcome-links_login">
-                        <span class="nav-welcome-links_logout_icon"></span>
+                        <img src="/assets/icons/logout.svg" alt="Logout Icon" class="search-icon" />
                         Logout
                     </Link>
                 </template>

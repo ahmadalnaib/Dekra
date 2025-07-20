@@ -30,7 +30,9 @@
             }
         </style>
 
-        <title inertia>{{ config('app.name', 'Laravel') }}</title>
+        <title inertia>{{ config('app.name', 'Dekra') }}</title>
+        <meta name="description" content="Dekra - Willkommen in unserem Hilfe-Center. Hier finden Sie eine Sammlung der häufigsten Fragen und Antworten zu unseren Services.">
+        <meta name="keywords" content="Dekra, Hilfe-Center, FAQ, häufige Fragen, Antworten, Services, Kundenservice">
 
         <link rel="icon" href="/favicon.ico" sizes="any">
         <link rel="icon" href="/favicon.svg" type="image/svg+xml">
