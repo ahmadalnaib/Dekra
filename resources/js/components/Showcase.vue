@@ -59,7 +59,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, ref, onMounted, watch } from 'vue';
 
 const props = defineProps({
     categories: {
@@ -76,6 +76,20 @@ const props = defineProps({
 const selectedCategoryId = ref(null);
 const searchQuery = ref('');
 const openFaqs = ref([]);
+
+// Set the first category as default when component mounts
+onMounted(() => {
+    if (props.categories.length > 0) {
+        selectedCategoryId.value = props.categories[0].id;
+    }
+});
+
+// Watch for categories prop changes and set first category if none selected
+watch(() => props.categories, (newCategories) => {
+    if (newCategories.length > 0 && selectedCategoryId.value === null) {
+        selectedCategoryId.value = newCategories[0].id;
+    }
+}, { immediate: true });
 
 // Computed properties
 const filteredFaqs = computed(() => {
@@ -121,6 +135,11 @@ const getSelectedCategoryName = () => {
     return category ? category.name : 'Häufige Fragen';
 };
 
+const performSearch = () => {
+    // Search is reactive through the computed property
+    // This function can be used for additional search logic if needed
+    console.log('Searching for:', searchQuery.value);
+};
 
 </script>
 
@@ -137,7 +156,10 @@ const getSelectedCategoryName = () => {
 
 .category-card.active {
     border: 2px solid #006b52;
-
+    background: #006b52;
+    h3{
+        color: #b0fd78;
+    }
 }
 
 .no-faqs {
