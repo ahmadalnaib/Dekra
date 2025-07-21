@@ -78,7 +78,10 @@
             </div>
 
             <!-- ✅ Pagination -->
-            <Pagination :links="props.faqs.links" />
+        </div>
+        <div class="m-4">
+
+            <Pagination :pagination="faqs" />
         </div>
 
         <!-- FAQ Modal -->

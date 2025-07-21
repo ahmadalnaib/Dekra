@@ -15,7 +15,7 @@
             <!-- Controls -->
             <div class="controls-section">
                 <div class="count-section">
-                    <h3>Insgesamt {{ filteredTags.length }} von {{ props.tags.length }} Tags</h3>
+                    <h3>Insgesamt {{ filteredTags.length }} von {{ props.tags.total }} Tags</h3>
                 </div>
 
                 <div class="search-box">
@@ -56,14 +56,17 @@
                                     </button>
                                 </td>
                             </tr>
+                           
                         </template>
                         <tr v-else>
                             <td colspan="3" class="py-4 text-center text-gray-500">Keine Tags gefunden.</td>
                         </tr>
                     </tbody>
                 </table>
+                
             </div>
         </div>
+        <Pagination :pagination="tags" />
 
         <!-- Tag Modal -->
         <TagModal :show="showModal" :tag="selectedTag" :tags="tags" @close="closeModal" @success="handleSuccess" />
@@ -82,6 +85,7 @@
 
 <script setup>
 import DeleteConfirmationModal from '@/components/DeleteConfirmationModal.vue';
+import Pagination from '@/components/Pagination.vue';
 import TagModal from '@/components/TagModal.vue';
 import NavWelcome from '@/components/NavWelcome.vue';
 import { router,Head } from '@inertiajs/vue3';
@@ -89,7 +93,7 @@ import { computed, ref } from 'vue';
 
 const props = defineProps({
     tags: {
-        type: Array,
+        type: Object,
         required: true,
     },
 });
@@ -101,14 +105,14 @@ const showDeleteConfirmation = ref(false);
 const tagToDelete = ref(null);
 
 const filteredTags = computed(() => {
-    if (!searchQuery.value) return props.tags;
-    return props.tags.filter((tag) => tag.name?.toLowerCase().includes(searchQuery.value.toLowerCase()));
+    // Access the data array from the paginated response
+    const tagsData = props.tags.data || [];
+    
+    if (!searchQuery.value) return tagsData;
+    return tagsData.filter((tag) => tag.name?.toLowerCase().includes(searchQuery.value.toLowerCase()));
 });
 
-const performSearch = () => {
-    // Search is reactive, so this function can be empty or used for additional logic
-    console.log('Searching for:', searchQuery.value);
-};
+
 
 const formatDateTime = (dateTime) => {
     if (!dateTime) return '-';

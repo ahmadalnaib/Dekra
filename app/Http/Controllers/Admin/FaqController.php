@@ -21,7 +21,7 @@ class FaqController extends Controller
         if (request()->user()->cannot('viewAny', Faq::class)) {
             abort(403);
         }
-        $faqs = Faq::with('category')->latest()->paginate(15);
+        $faqs = Faq::with('category')->latest()->paginate(5);
         $categories = Category::all();
         $tags = Tag::all();
         return Inertia::render('faqs/Index', [

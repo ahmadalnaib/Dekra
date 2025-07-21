@@ -6,9 +6,10 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Tag;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\TagRequest;
 use Illuminate\Validation\Rule;
+use App\Http\Requests\TagRequest;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
 
 class TagController extends Controller
 {
@@ -20,7 +21,9 @@ class TagController extends Controller
         if (request()->user()->cannot('viewAny', Tag::class)) {
             abort(403);
         }
-        $tags = Tag::orderBy('created_at', 'desc')->get();
+        // $tags = Tag::orderBy('created_at', 'desc')->get();
+        $tags=Tag::paginate(5);
+        Log::info($tags);
 
         return Inertia::render('tags/Index', [
             'tags' => $tags,
