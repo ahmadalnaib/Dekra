@@ -1,12 +1,13 @@
 <template>
     <div>
-    <Head title="Tag Verwaltung" />
+        <Head title="Tag Verwaltung" />
         <NavWelcome />
 
         <div class="showcase-content">
             <h1>Tag Verwaltung</h1>
-            <p>Hier verwalten Sie die Schlagwörter (Tags) für Ihre Inhalte. Erstellen, bearbeiten und organisieren Sie Tags,
-                um die Auffindbarkeit und Kategorisierung  Ihrer digitalen Trainings zu optimieren.
+            <p>
+                Hier verwalten Sie die Schlagwörter (Tags) für Ihre Inhalte. Erstellen, bearbeiten und organisieren Sie Tags, um die Auffindbarkeit
+                und Kategorisierung Ihrer digitalen Trainings zu optimieren.
             </p>
         </div>
 
@@ -27,7 +28,7 @@
                 </div>
 
                 <button class="create-btn" @click="createNewTag">
-                     <img src="/assets/icons/add.svg" alt="Add Icon" class="search-icon" />
+                    <img src="/assets/icons/add.svg" alt="Add Icon" class="search-icon" />
                     Neue Tag erstellen
                 </button>
             </div>
@@ -56,14 +57,12 @@
                                     </button>
                                 </td>
                             </tr>
-                           
                         </template>
                         <tr v-else>
                             <td colspan="3" class="py-4 text-center text-gray-500">Keine Tags gefunden.</td>
                         </tr>
                     </tbody>
                 </table>
-                
             </div>
         </div>
         <Pagination :pagination="tags" />
@@ -85,10 +84,10 @@
 
 <script setup>
 import DeleteConfirmationModal from '@/components/DeleteConfirmationModal.vue';
+import NavWelcome from '@/components/NavWelcome.vue';
 import Pagination from '@/components/Pagination.vue';
 import TagModal from '@/components/TagModal.vue';
-import NavWelcome from '@/components/NavWelcome.vue';
-import { router,Head } from '@inertiajs/vue3';
+import { Head, router } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 
 const props = defineProps({
@@ -107,12 +106,10 @@ const tagToDelete = ref(null);
 const filteredTags = computed(() => {
     // Access the data array from the paginated response
     const tagsData = props.tags.data || [];
-    
+
     if (!searchQuery.value) return tagsData;
     return tagsData.filter((tag) => tag.name?.toLowerCase().includes(searchQuery.value.toLowerCase()));
 });
-
-
 
 const formatDateTime = (dateTime) => {
     if (!dateTime) return '-';
@@ -162,14 +159,4 @@ const closeModal = () => {
     showModal.value = false;
     selectedTag.value = null;
 };
-
-const handleSuccess = () => {
-    // The modal will close automatically
-    // You might want to show a success message here
-    console.log('Tag saved successfully');
-};
 </script>
-
-<style scoped>
-/* Optional styling here */
-</style>

@@ -22,8 +22,9 @@ class TagController extends Controller
             abort(403);
         }
         // $tags = Tag::orderBy('created_at', 'desc')->get();
-        $tags=Tag::paginate(5);
-        Log::info($tags);
+        // $tags=Tag::paginate(5);
+        $tags=Tag::latest()->paginate(5);
+    
 
         return Inertia::render('tags/Index', [
             'tags' => $tags,

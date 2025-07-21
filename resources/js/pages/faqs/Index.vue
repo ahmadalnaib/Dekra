@@ -6,8 +6,8 @@
         <div class="showcase-content">
             <h1>FAQ Verwaltung</h1>
             <p>
-                Willkommen im internen Tool zur Verwaltung von häufig gestellten Fragen. Hire Sie neue Fragen für Quizzes,Tests order
-                FAQs erstellen, bearbeiten Fragen anpassen  und Ihre  Fragensammlungen effizient organisieren. 
+                Willkommen im internen Tool zur Verwaltung von häufig gestellten Fragen. Hire Sie neue Fragen für Quizzes,Tests order FAQs erstellen,
+                bearbeiten Fragen anpassen und Ihre Fragensammlungen effizient organisieren.
             </p>
         </div>
 
@@ -76,11 +76,9 @@
                     </tbody>
                 </table>
             </div>
-
-            <!-- ✅ Pagination -->
         </div>
+        <!--  Pagination -->
         <div class="m-4">
-
             <Pagination :pagination="faqs" />
         </div>
 
@@ -104,7 +102,7 @@ import DeleteConfirmationModal from '@/components/DeleteConfirmationModal.vue';
 import FaqModal from '@/components/FaqModal.vue';
 import NavWelcome from '@/components/NavWelcome.vue';
 import Pagination from '@/components/Pagination.vue';
-import { router,Head } from '@inertiajs/vue3';
+import { Head, router } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 
 const props = defineProps({
@@ -189,14 +187,4 @@ const closeModal = () => {
     showModal.value = false;
     selectedFaq.value = null;
 };
-
-const handleSuccess = () => {
-    // The modal will close automatically
-    // You might want to show a success message here
-    console.log('FAQ saved successfully');
-};
 </script>
-
-<style scoped>
-/* Optional styling here */
-</style>
