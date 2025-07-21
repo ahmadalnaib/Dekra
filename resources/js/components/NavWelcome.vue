@@ -1,15 +1,11 @@
 <script setup lang="ts">
-import { Head, Link } from '@inertiajs/vue3';
+import { Link } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
 const isMenuOpen = ref(false);
-
-
 </script>
 
 <template>
-    <Head title="DEKRA" />
-
     <header>
         <nav class="nav-welcome">
             <!-- Logo -->
@@ -19,7 +15,7 @@ const isMenuOpen = ref(false);
 
             <!-- Desktop links -->
             <div class="nav-welcome-links desktop">
-        <template v-if="$page.props.auth.user">
+                <template v-if="$page.props.auth.user">
                     <!-- Show Tags and Fragen only for admin users -->
                     <template v-if="$page.props.auth.user.role === 'admin'">
                         <Link :href="route('home')" class="nav-welcome-links_faq">FAQ</Link>
@@ -50,7 +46,7 @@ const isMenuOpen = ref(false);
             <template v-else>
                 <Link :href="route('home')" class="nav-welcome-links_faq">FAQ</Link>
                 <Link :href="route('tags.index')" class="nav-welcome-links_tags">Tags</Link>
-                       <Link :href="route('faqs.index')" class="nav-welcome-links_tags">Fragen</Link>
+                <Link :href="route('faqs.index')" class="nav-welcome-links_tags">Fragen</Link>
                 <Link :href="route('login')" class="nav-welcome-links_login">
                     <span class="nav-welcome-links_login_icon"></span>
                     Login

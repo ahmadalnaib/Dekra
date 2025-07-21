@@ -1,5 +1,8 @@
 <template>
-    <Head title="FAQ Verwaltung" />
+    <Head>
+        <title>FAQ Verwaltung</title>
+        <meta name="description" content="Verwalten Sie Ihre häufig gestellten Fragen" />
+    </Head>
     <div>
         <NavWelcome />
 

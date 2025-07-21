@@ -1,6 +1,9 @@
 <template>
     <div>
-        <Head title="Tag Verwaltung" />
+        <Head>
+            <title>Tag Verwaltung</title>
+            <meta name="description" content="Verwalten Sie Ihre Tags" />
+        </Head>
         <NavWelcome />
 
         <div class="showcase-content">
